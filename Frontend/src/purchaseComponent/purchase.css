@@ -1,0 +1,48 @@
+#date-label, #row{
+    margin-right: 20px;
+}
+h1{
+    text-align: center;
+}
+.col{
+    display: flex;
+    margin: 2%;
+}
+.left{
+    float: left;
+    flex: 50%;
+    margin-left: 50px;
+}
+.right{
+    float: right;
+    flex: 50%;
+}
+
+input[type=number],input[type=date]{
+    border-radius: 10px;
+}
+#submit-btn{
+    margin-left: 50% ;
+    background-color: #03a338;
+    border: none;
+}
+#add-btn{
+    margin-left: 20px;
+    background-color: #03a338;;
+    border: none;
+
+}
+thead{
+    background-color: #000;
+    color: #fff;
+}
+#table{
+    font-size: large;
+    font-weight: 600;
+}
+
+.btn:hover{
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    transform: scale(1.1);
+  }

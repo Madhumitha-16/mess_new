@@ -1,0 +1,62 @@
+@media all and (min-width: 480px) {
+  .main{
+    display: flex;
+    background-color: #f0f0f0;
+  }
+  .Login {
+      padding: 5% 0%;
+      margin-right: 10%;
+      margin-left: 15%;
+      flex: 100%;
+      height: 100vh;
+    }
+  .box{
+    background-color: #fff;
+      box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+      padding: 10%;
+  }
+  .Login img{
+    width: 50%;
+    margin-left: 20%;
+    margin-bottom: 20%;
+  }
+  h2{
+    text-align: center;
+  }
+    .Login form {
+      margin: 0 auto;
+      max-width: 320px;
+    }
+    .Login Label {
+      padding-bottom: 10px;
+      padding-top: 10px;
+      font-weight: 500;
+    }
+    .Login Button{
+        margin-top: 20px;
+    }
+  }
+  .button{
+    display: flex;  
+    justify-content: center;  
+    align-items: center;  
+  }
+  .Logo img{
+    width: 110%;
+    height: 100%;
+    object-fit: fill;
+  }
+  .button Button{
+    background-color: #014F1B;
+    border: none;
+  }
+  .button Button:hover{
+    background-color: #04802d;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    transform: scale(1.1);
+  }
+  .button Button[disabled]{
+    background-color: #014F1B;
+  }
+  
