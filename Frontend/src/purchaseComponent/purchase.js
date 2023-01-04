@@ -7,75 +7,52 @@ import './purchase.css';
 export default function Purchase() {
   const [items, setItems] = useState([]);
   const [counter, setCounter] = useState(2);
-
+  const [data,setData]=useState("");
+  const[category,setCategory]=useState("");
+  const[vendor,setVendor]=useState("");
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/retrive")
+      .get("http://localhost:5000/purchase/getItems")
       .then(function (response) {
-        // handle success
-
         setItems(response.data);
       })
       .catch(function (error) {
-        // handle error
         console.log(error);
       })
       .finally(function () {
-        // always executed
       });
   }, []);
 
-  const getQuantity = async (e) => {
-    let itemName = e.target.value;
-    let id = e.target.id;
+  
+  const totAmount = (e) => {
+    const val=e.target.id;
+    const quantity=document.getElementById("quantity").value;
+    console.log(val,quantity);
+  };
+
+  const getCategory=async(e)=>{
+    let id=e.target.value;
     console.log(id);
-
-    document.getElementById(id + " RMK").value = 0;
-    document.getElementById(id + " RMD").value = 0;
-    document.getElementById(id + " RMKCET").value = 0;
-
-    console.log(itemName);
-    let quantity = document.getElementById(id + " totquantity");
-    let currentQuantity = document.getElementById(id + " currquantity");
+    let item=document.getElementById("item").value;
+    // let category=document.getElementById("category");
+    let vendor=document.getElementById("vendor");
     axios
-      .post("http://localhost:5000/dispatch/getQuantity", {
-        itemName: itemName,
+      .post("http://localhost:5000/purchase/getCategoryVendor", {
+        item:item,
       })
       .then(function (response) {
-        console.log(response.data[0].quantity);
-        quantity.value = response.data[0].quantity;
-        currentQuantity.value = response.data[0].quantity;
+        console.log(response.data[0]);
+        setData(response.data[0]);
+        // setCategory(response.data[0].category);
+        console.log(category);
+        // vendor.value=response.data[0].vendorName;
       })
       .catch(function (error) {
         console.log(error);
       });
-  };
-
-  const addValue = (e) => {
-    const element = e.target.id;
-    const split = element.split(" ");
-    const id = split[0];
-    const place = split[1];
-    // console.log(id,place)
-    let quantity = document.getElementById(id + " totquantity");
-
-    let totQuantity = parseFloat(quantity.value);
-    let currQuantity = document.getElementById(id + " currquantity");
-    let rmk = parseFloat(document.getElementById(id + " RMK").value);
-    let rmd = parseFloat(document.getElementById(id + " RMD").value);
-    let rmkcet = parseFloat(document.getElementById(id + " RMKCET").value);
-
-    let currentQuantity = totQuantity - (rmk + rmd + rmkcet);
-    if(currentQuantity<0){
-      window.alert("Item Quantity exceeded max limit")
-      let x =document.getElementById(id+' '+place);
-      currentQuantity+=parseFloat(x.value);
-      x.value=0;
-    }
-
-    currQuantity.value = currentQuantity;
-  };
+      console.log(data);
+  }
 
   const submit = () => {
     let arr = [];
@@ -98,129 +75,110 @@ export default function Purchase() {
       let rmk = document.getElementById(i + " RMK").value;
       let rmd = document.getElementById(i + " RMD").value;
       let rmkcet = document.getElementById(i + " RMKCET").value;
-
-      
-
       let obj = new Obj(item, currentQuantity,rmk,rmd,rmkcet);
-
       arr.push(obj);
-      
     }
 
     
     console.log(arr);
 
-
-    axios.post('http://localhost:5000/dispatch/updateDispatch', {
-      ItemArray : arr
-
-    })
-    .then(async function (response) {
-      await console.log(response.data);
-      alert("Items updated successfully")
-      window.location.reload();
-
-    })
-    .catch(async function (error) {
-      await console.log(error);
-    });
   };
+
   const generateRows = () => {
     let n=document.getElementById("num").value;
   for(let i=1;i<=n;i++){
   let x = document.getElementById("table");
-  let row = x.insertRow();
+    let row = x.insertRow();
 
-  let cell1 = row.insertCell();
-  let cell2 = row.insertCell();
-  let cell3 = row.insertCell();
-  let cell4 = row.insertCell();
-  let cell5 = row.insertCell();
-  let cell6 = row.insertCell();
-  let cell7 = row.insertCell();
+    let cell1 = row.insertCell();
+    let cell2 = row.insertCell();
+    let cell3 = row.insertCell();
+    let cell4 = row.insertCell();
+    let cell5 = row.insertCell();
+    let cell6 = row.insertCell();
+    let cell7 = row.insertCell();
 
-  //select
+    //select
 
-  const select = document.createElement("select");
-  select.setAttribute("class", "form-select");
-  const option = document.createElement("option");
-  const optionText = document.createTextNode("Select");
-  option.appendChild(optionText);
-  option.setAttribute("value", "select");
-  select.setAttribute("id", counter);
-  select.addEventListener("change", getQuantity, false);
-  select.appendChild(option);
-
-  for (let i = 1; i < items.length; i++) {
+    const select = document.createElement("Select");
+    select.setAttribute("class", "form-select");
     const option = document.createElement("option");
-    const optionText = document.createTextNode(items[i].item);
+    const optionText = document.createTextNode("Select");
     option.appendChild(optionText);
-    option.setAttribute("value", items[i].item);
+    option.setAttribute("value", "select");
+    select.setAttribute("id", counter);
+
     select.appendChild(option);
-  }
 
-  cell2.appendChild(select);
+    for (let i = 1; i < items.length; i++) {
+      const option = document.createElement("option");
+      const optionText = document.createTextNode(items[i].item);
+      option.appendChild(optionText);
+      option.setAttribute("value", items[i].item);
+      select.appendChild(option);
+    }
 
-  // totquantity
+    cell2.appendChild(select);
 
-  let input1 = document.createElement("input");
-  input1.setAttribute("type", "text");
-  input1.setAttribute("class", "form-control");
-  input1.setAttribute("placeholder", "Category");
-  input1.disabled = true;
+    // totquantity
 
-  cell3.appendChild(input1);
+    let input1 = document.createElement("input");
+    input1.setAttribute("type", "number");
+    input1.setAttribute("placeholder", "Category");
+    input1.setAttribute("class", "form-control");
+    input1.setAttribute("id", counter + " totquantity");
+    input1.disabled = true;
 
-  //current Quantity
+    cell3.appendChild(input1);
 
-  let input2 = document.createElement("input");
-  input2.setAttribute("type", "number");
-  input2.setAttribute("class", "form-control");
-  input2.setAttribute("id", counter + " currquantity");
-  input2.setAttribute("placeholder", "Vendor");
-  input2.disabled = true;
+    //current Quantity
 
-  cell4.appendChild(input2);
+    let input2 = document.createElement("input");
+    input2.setAttribute("type", "number");
+    input2.setAttribute("placeholder", "Vendor");
+    input2.setAttribute("class", "form-control");
+    input2.setAttribute("id", counter + " currquantity");
+    input2.disabled = true;
 
-  //RMK
+    cell4.appendChild(input2);
 
-  let input3 = document.createElement("input");
-  input3.setAttribute("type", "number");
-  input3.setAttribute("class", "form-control");
-  input3.setAttribute("placeholder", "Quantity");
-  input3.setAttribute("id", counter + " RMK");
-  input3.addEventListener("change", addValue, false);
+    //RMK
 
-  cell5.appendChild(input3);
-
-  //RMD
-
-  let input4 = document.createElement("input");
-  input4.setAttribute("type", "number");
-  input4.setAttribute("class", "form-control");
-  input4.setAttribute("placeholder", "Amount");
-  input4.setAttribute("id", counter + " RMD");
-  input4.addEventListener("change", addValue, false);
-
-  cell6.appendChild(input4);
-
-  let input5 = document.createElement("input");
-  input5.setAttribute("type", "number");
-  input5.setAttribute("class", "form-control");
-  input5.setAttribute("placeholder", "Total Amount");
-  input5.setAttribute("id", counter + " RMKCET");
-  input5.addEventListener("change", addValue, false);
-  input5.disabled=true;
-
-  cell7.appendChild(input5);
-
-  cell1.innerHTML = counter;
-  setCounter(counter + 1);
-  console.log(counter);
-}
-}
+    let input3 = document.createElement("input");
+    input3.setAttribute("type", "number");
+    input3.setAttribute("placeholder", "Quantity");
+    input3.setAttribute("class", "form-control");
+    input3.setAttribute("id", counter + " RMK");
   
-  return (
+
+    cell5.appendChild(input3);
+
+    //RMD
+
+    let input4 = document.createElement("input");
+    input4.setAttribute("type", "number");
+    input4.setAttribute("placeholder", "Amount");
+    input4.setAttribute("class", "form-control");
+    input4.setAttribute("id", counter + " RMD");
+
+    cell6.appendChild(input4);
+
+    let input5 = document.createElement("input");
+    input5.setAttribute("type", "number");
+    input5.setAttribute("placeholder", "Total Amount");
+    input5.setAttribute("class", "form-control");
+    input5.setAttribute("id", counter + " RMKCET");
+    input5.disabled=true;
+
+    cell7.appendChild(input5);
+
+    cell1.innerHTML = counter;
+
+    setCounter(counter + 1);
+}
+}
+
+return (
     <div>
       <h1 style={{ marginTop: "2%" }}>Enter Purchase Details</h1>
       <div className="container" style={{ marginTop: "3%" }}>
@@ -256,8 +214,8 @@ export default function Purchase() {
                 <select
                   class="form-select"
                   aria-label="Default select example"
-                  onChange={getQuantity}
-                  id="1"
+                  onChange={getCategory}
+                  id="item"
                 >
                   <option selected>Select</option>
 
@@ -276,8 +234,9 @@ export default function Purchase() {
                     type="number"
                     class="form-control"
                     placeholder="Category"
-                    id="1 totquantity"
+                    id="category"
                     disabled
+                    value={category}
                   />
                 </div>
               </td>
@@ -287,8 +246,9 @@ export default function Purchase() {
                     type="number"
                     class="form-control"
                     placeholder="Vendor"
-                    id="1 currquantity"
+                    id="vendor"
                     disabled
+                    onChange={getCategory}
                   />
                 </div>
               </td>
@@ -298,8 +258,7 @@ export default function Purchase() {
                     type="number"
                     class="form-control"
                     placeholder="Quantity"
-                    id="1 RMK"
-                    onChange={addValue}
+                    id="quantity"
                   />
                 </div>
               </td>
@@ -310,8 +269,7 @@ export default function Purchase() {
                     type="text"
                     class="form-control"
                     placeholder="Amount"
-                    id="1 RMD"
-                    onChange={addValue}
+                    id="amount"
                   />
                 </div>
               </td>
@@ -321,8 +279,8 @@ export default function Purchase() {
                     type="number"
                     class="form-control"
                     placeholder="Total Amount"
-                    id="1 RMKCET"
-                    onChange={addValue}
+                    id="total"
+                    onChange={totAmount}
                     disabled
                   />
                 </div>
