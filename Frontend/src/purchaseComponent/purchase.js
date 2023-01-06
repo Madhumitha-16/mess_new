@@ -7,9 +7,7 @@ import './purchase.css';
 export default function Purchase() {
   const [items, setItems] = useState([]);
   const [counter, setCounter] = useState(2);
-  const [data,setData]=useState("");
-  const[category,setCategory]=useState("");
-  const[vendor,setVendor]=useState("");
+
 
   useEffect(() => {
     axios
@@ -26,62 +24,55 @@ export default function Purchase() {
 
   
   const totAmount = (e) => {
-    const val=e.target.id;
-    const quantity=document.getElementById("quantity").value;
-    console.log(val,quantity);
+    let id=e.target.id;
+    let quantity=document.getElementById(id[0]+" quantity");
+    let amountkg=document.getElementById(id[0]+" amount");
+    let total=document.getElementById(id[0]+" total");
+    console.log(quantity,amountkg,total);
+    total.value=quantity.value*amountkg.value;
   };
 
-  const getCategory=async(e)=>{
-    let id=e.target.value;
-    console.log(id);
-    let item=document.getElementById("item").value;
-    // let category=document.getElementById("category");
-    let vendor=document.getElementById("vendor");
+  const getCategory=async (e)=>{
+    let item=e.target.value; 
+    let id=e.target.id; 
+    console.log(id[0]); 
+    let category = document.getElementById(id[0]+" category");
+    let vendor = document.getElementById(id[0]+" vendor"); 
+    console.log(category,vendor);
     axios
       .post("http://localhost:5000/purchase/getCategoryVendor", {
         item:item,
       })
       .then(function (response) {
-        console.log(response.data[0]);
-        setData(response.data[0]);
-        // setCategory(response.data[0].category);
-        console.log(category);
-        // vendor.value=response.data[0].vendorName;
+        console.log(response.data[0].category);
+        category.value = response.data[0].category;
+        vendor.value = response.data[0].vendorName;
       })
       .catch(function (error) {
         console.log(error);
       });
-      console.log(data);
   }
-
+  
   const submit = () => {
-    let arr = [];
-    let date = document.getElementById("date").value;
-
-    class Obj {
-      constructor(item, currentQuantity,rmk,rmd,rmkcet) {
-        this.ItemName = item;
-        this.CurrentQuantity = currentQuantity;
-        this.RMK = rmk;
-        this.RMD = rmd;
-        this.RMKCET = rmkcet;
-        this.DATE = date;
-      }
-    }
-
-    for (let i = 1; i < counter; i++) {
-      let item = document.getElementById(i).value;
-      let currentQuantity = document.getElementById(i + " currquantity").value;
-      let rmk = document.getElementById(i + " RMK").value;
-      let rmd = document.getElementById(i + " RMD").value;
-      let rmkcet = document.getElementById(i + " RMKCET").value;
-      let obj = new Obj(item, currentQuantity,rmk,rmd,rmkcet);
-      arr.push(obj);
-    }
-
-    
-    console.log(arr);
-
+    let item=document.getElementById("item").value;    
+    let date=document.getElementById("date").value;
+    let category=document.getElementById("category").value;
+    let quantity=document.getElementById("quantity").value;
+    let amountkg=document.getElementById("amount").value;
+    let amount=document.getElementById("total").value;
+axios.post("http://localhost:5000/purchase/add", {
+  date:date,
+  item:item,
+  category:category,
+  quantity:quantity,
+  amountkg:amountkg,
+  amount:amount
+}).then(function (response) {
+  console.log(response.data);
+})
+.catch(function (error) {
+  console.log(error);
+});
   };
 
   const generateRows = () => {
@@ -107,7 +98,8 @@ export default function Purchase() {
     option.appendChild(optionText);
     option.setAttribute("value", "select");
     select.setAttribute("id", counter);
-
+    console.log(counter);
+    select.addEventListener("change", getCategory, false);
     select.appendChild(option);
 
     for (let i = 1; i < items.length; i++) {
@@ -123,10 +115,10 @@ export default function Purchase() {
     // totquantity
 
     let input1 = document.createElement("input");
-    input1.setAttribute("type", "number");
+    input1.setAttribute("type", "text");
     input1.setAttribute("placeholder", "Category");
     input1.setAttribute("class", "form-control");
-    input1.setAttribute("id", counter + " totquantity");
+    input1.setAttribute("id", counter + " category");
     input1.disabled = true;
 
     cell3.appendChild(input1);
@@ -134,10 +126,10 @@ export default function Purchase() {
     //current Quantity
 
     let input2 = document.createElement("input");
-    input2.setAttribute("type", "number");
+    input2.setAttribute("type", "text");
     input2.setAttribute("placeholder", "Vendor");
     input2.setAttribute("class", "form-control");
-    input2.setAttribute("id", counter + " currquantity");
+    input2.setAttribute("id", counter + " vendor");
     input2.disabled = true;
 
     cell4.appendChild(input2);
@@ -148,9 +140,7 @@ export default function Purchase() {
     input3.setAttribute("type", "number");
     input3.setAttribute("placeholder", "Quantity");
     input3.setAttribute("class", "form-control");
-    input3.setAttribute("id", counter + " RMK");
-  
-
+    input3.setAttribute("id", counter + " quantity");
     cell5.appendChild(input3);
 
     //RMD
@@ -159,17 +149,16 @@ export default function Purchase() {
     input4.setAttribute("type", "number");
     input4.setAttribute("placeholder", "Amount");
     input4.setAttribute("class", "form-control");
-    input4.setAttribute("id", counter + " RMD");
-
+    input4.setAttribute("id", counter + " amount");
     cell6.appendChild(input4);
 
     let input5 = document.createElement("input");
     input5.setAttribute("type", "number");
     input5.setAttribute("placeholder", "Total Amount");
     input5.setAttribute("class", "form-control");
-    input5.setAttribute("id", counter + " RMKCET");
+    input5.setAttribute("id", counter + " total");
     input5.disabled=true;
-
+    input3.addEventListener("change",totAmount, false);
     cell7.appendChild(input5);
 
     cell1.innerHTML = counter;
@@ -215,7 +204,7 @@ return (
                   class="form-select"
                   aria-label="Default select example"
                   onChange={getCategory}
-                  id="item"
+                  id="1 item"
                 >
                   <option selected>Select</option>
 
@@ -231,24 +220,24 @@ return (
               <td>
                 <div class="input-group mb-3">
                   <input
-                    type="number"
+                    type="text"
                     class="form-control"
                     placeholder="Category"
-                    id="category"
+                    id="1 category"
                     disabled
-                    value={category}
+                    defaultValue=""
                   />
                 </div>
               </td>
               <td>
                 <div class="input-group mb-3">
                   <input
-                    type="number"
+                    type="text"
                     class="form-control"
                     placeholder="Vendor"
-                    id="vendor"
+                    id="1 vendor"
                     disabled
-                    onChange={getCategory}
+                    defaultValue=""
                   />
                 </div>
               </td>
@@ -258,7 +247,7 @@ return (
                     type="number"
                     class="form-control"
                     placeholder="Quantity"
-                    id="quantity"
+                    id="1 quantity"
                   />
                 </div>
               </td>
@@ -269,7 +258,8 @@ return (
                     type="text"
                     class="form-control"
                     placeholder="Amount"
-                    id="amount"
+                    onChange={totAmount}
+                    id="1 amount"
                   />
                 </div>
               </td>
@@ -279,9 +269,9 @@ return (
                     type="number"
                     class="form-control"
                     placeholder="Total Amount"
-                    id="total"
-                    onChange={totAmount}
+                    id="1 total"
                     disabled
+                    defaultValue=""
                   />
                 </div>
               </td>

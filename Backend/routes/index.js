@@ -44,6 +44,7 @@ console.log(item);
 let sql=`select vendorName,category from vendor where category = (select category from category where item='${item}')`;
 conn.query(sql,item,function(err,result){
   if(err) throw err;
+  console.log(result);
   res.send(result);
 })
 
