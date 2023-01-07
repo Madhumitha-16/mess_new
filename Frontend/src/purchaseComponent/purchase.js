@@ -7,7 +7,6 @@ import './purchase.css';
 export default function Purchase() {
   const [items, setItems] = useState([]);
   const [counter, setCounter] = useState(2);
-  let j=2;
 
   useEffect(() => {
     axios
@@ -91,6 +90,7 @@ export default function Purchase() {
   const generateRows = () => {
 
   let n=document.getElementById("num").value;
+  let ctr=counter;
   for(let i=1;i<=n;i++){
   let x = document.getElementById("table");
     let row = x.insertRow();
@@ -109,7 +109,7 @@ export default function Purchase() {
     const optionText = document.createTextNode("Select");
     option.appendChild(optionText);
     option.setAttribute("value", "select");
-    select.setAttribute("id", counter+" item");
+    select.setAttribute("id", ctr+" item");
     select.addEventListener("change", getCategory, false);
     select.appendChild(option);
 
@@ -128,7 +128,7 @@ export default function Purchase() {
     input1.setAttribute("type", "text");
     input1.setAttribute("placeholder", "Category");
     input1.setAttribute("class", "form-control");
-    input1.setAttribute("id", counter + " category");
+    input1.setAttribute("id", ctr + " category");
     input1.disabled = true;
 
     cell3.appendChild(input1);
@@ -138,7 +138,7 @@ export default function Purchase() {
     input2.setAttribute("type", "text");
     input2.setAttribute("placeholder", "Vendor");
     input2.setAttribute("class", "form-control");
-    input2.setAttribute("id", counter + " vendor");
+    input2.setAttribute("id", ctr + " vendor");
     input2.disabled = true;
 
     cell4.appendChild(input2);
@@ -148,7 +148,7 @@ export default function Purchase() {
     input3.setAttribute("type", "number");
     input3.setAttribute("placeholder", "Quantity");
     input3.setAttribute("class", "form-control");
-    input3.setAttribute("id", counter + " quantity");
+    input3.setAttribute("id", ctr + " quantity");
     input3.addEventListener("change",totAmount, false);
     cell5.appendChild(input3);
 
@@ -157,7 +157,7 @@ export default function Purchase() {
     input4.setAttribute("type", "number");
     input4.setAttribute("placeholder", "Amount");
     input4.setAttribute("class", "form-control");
-    input4.setAttribute("id", counter + " amount");
+    input4.setAttribute("id", ctr + " amount");
     input4.addEventListener("change",totAmount, false);
     cell6.appendChild(input4);
 
@@ -165,14 +165,13 @@ export default function Purchase() {
     input5.setAttribute("type", "number");
     input5.setAttribute("placeholder", "Total Amount");
     input5.setAttribute("class", "form-control");
-    input5.setAttribute("id", counter + " total");
+    input5.setAttribute("id", ctr + " total");
     input5.disabled=true;
     cell7.appendChild(input5);
 
-    cell1.innerHTML = j;
-    j=j+1;
-    setCounter(counter+1);
-    console.log(counter);
+    cell1.innerHTML = ctr;
+    ctr+=1;
+    setCounter(ctr);
 }
 }
 
