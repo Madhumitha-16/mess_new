@@ -29,14 +29,14 @@ router.post('/purchase/add', async (req, res) => {
   var arr = req.body.arr;
   console.log(req.body.arr);
   var length = arr.length;
-  let date;
+  let date=req.body.date;
   for(let i=0;i<length;i++){
   var item=arr[i].item;
   var category=arr[i].category;
   var quantity=arr[i].quantity;
   var amountkg=arr[i].amount;
   var amount=arr[i].total;
-  var sql = `INSERT INTO purchase (item,category,quantity,amountkg,amount,date) VALUES (?,?,?,?,?,NOW())`;
+  var sql = `INSERT INTO purchase (item,category,quantity,amountkg,amount,date) VALUES (?,?,?,?,?,?)`;
   await conn.promise().query(sql,[item,category,quantity,amountkg,amount,date], function(err, result) {
     if (err) throw err;
   });

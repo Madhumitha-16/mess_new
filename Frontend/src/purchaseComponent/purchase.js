@@ -74,6 +74,7 @@ export default function Purchase() {
     }
     console.log(arr);
     axios.post('http://localhost:5000/purchase/add', {
+      date:date,
       arr:arr
     })
     .then(async function (response) {
@@ -130,7 +131,6 @@ export default function Purchase() {
     input1.setAttribute("class", "form-control");
     input1.setAttribute("id", ctr + " category");
     input1.disabled = true;
-
     cell3.appendChild(input1);
 
 
