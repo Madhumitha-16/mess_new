@@ -7,7 +7,7 @@ import './purchase.css';
 export default function Purchase() {
   const [items, setItems] = useState([]);
   const [counter, setCounter] = useState(2);
-
+  let j=2;
 
   useEffect(() => {
     axios
@@ -89,7 +89,8 @@ export default function Purchase() {
   };
 
   const generateRows = () => {
-    let n=document.getElementById("num").value;
+
+  let n=document.getElementById("num").value;
   for(let i=1;i<=n;i++){
   let x = document.getElementById("table");
     let row = x.insertRow();
@@ -109,7 +110,6 @@ export default function Purchase() {
     option.appendChild(optionText);
     option.setAttribute("value", "select");
     select.setAttribute("id", counter+" item");
-    console.log(counter);
     select.addEventListener("change", getCategory, false);
     select.appendChild(option);
 
@@ -169,12 +169,11 @@ export default function Purchase() {
     input5.disabled=true;
     cell7.appendChild(input5);
 
-    cell1.innerHTML = counter;
-
-    setCounter(counter + 1);
+    cell1.innerHTML = j;
+    j=j+1;
+    setCounter(counter+1);
     console.log(counter);
 }
-console.log(counter);
 }
 
 return (
