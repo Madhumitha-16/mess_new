@@ -25,26 +25,31 @@ router.get('/purchase/getItems', async(req,res)=>{
 });
 
 router.post('/purchase/add', async (req, res) => {
+  console.log("jus print");
+  var arr = req.body.arr;
+  console.log(req.body.arr);
+  var length = arr.length;
   let date;
-  let item=req.body.item;
-  let category=req.body.category;
-  let quantity=req.body.quantity;
-  let amountkg=req.body.amountkg;
-  let amount=quantity*amountkg;
-  let sql = `INSERT INTO purchase (item,category,quantity,amountkg,amount,date) VALUES (?,?,?,?,?,NOW())`;
+  for(let i=0;i<length;i++){
+  var item=arr[i].item;
+  var category=arr[i].category;
+  var quantity=arr[i].quantity;
+  var amountkg=arr[i].amount;
+  var amount=arr[i].total;
+  var sql = `INSERT INTO purchase (item,category,quantity,amountkg,amount,date) VALUES (?,?,?,?,?,NOW())`;
   await conn.promise().query(sql,[item,category,quantity,amountkg,amount,date], function(err, result) {
     if (err) throw err;
-    res.send(result);
   });
+}
+  res.send("Items inserted");
+
 });
 
 router.post('/purchase/getCategoryVendor',function(req,res){
 let item=req.body.item;
-console.log(item);
-let sql=`select vendorName,category from vendor where category = (select category from category where item='${item}')`;
+let sql=`select vendorName,category from vendor where category = (select distinct(category) from category where item='${item}')`;
 conn.query(sql,item,function(err,result){
   if(err) throw err;
-  console.log(result);
   res.send(result);
 })
 
